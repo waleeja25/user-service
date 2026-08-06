@@ -1,22 +1,21 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { BaseService } from '../common';
 import { User } from './entities';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
-  ) {}
+    protected readonly repository: Repository<User>,
+  ) {
+    super(repository);
+  }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  override async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.repository.findOne({
       where: {
         email: createUserDto.email,
@@ -27,32 +26,13 @@ export class UserService {
       throw new ConflictException('Email already exists');
     }
 
-    const user = this.repository.create(createUserDto);
-
-    return this.repository.save(user);
+    return super.create(createUserDto);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.repository.find();
-  }
-
-  async findById(id: number): Promise<User> {
-    const user = await this.repository.findOne({
-      where: {
-        id,
-      },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findById(id);
-
+  override async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     if (updateUserDto.email) {
       const existingUser = await this.repository.findOne({
         where: {
@@ -65,14 +45,6 @@ export class UserService {
       }
     }
 
-    this.repository.merge(user, updateUserDto);
-
-    return this.repository.save(user);
-  }
-
-  async delete(id: number): Promise<void> {
-    const user = await this.findById(id);
-
-    await this.repository.remove(user);
+    return super.update(id, updateUserDto);
   }
 }
