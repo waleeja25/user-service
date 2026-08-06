@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '@microservices/common';
+import { BaseEntity } from '../../common';
 
 @Entity('users')
 export class User extends BaseEntity {

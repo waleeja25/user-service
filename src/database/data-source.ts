@@ -3,23 +3,30 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
 import {
-  buildTypeOrmOptions,
+  createTypeOrmConfig,
+  envValidationSchema,
   validateEnv,
-  userValidationSchema,
-  UserEnvironment,
-} from '@microservices/config';
+} from '../config';
 
-const env = validateEnv<UserEnvironment>(userValidationSchema);
+interface EnvironmentVariables {
+  DB_HOST: string;
+  DB_PORT: number;
+  DB_USERNAME: string;
+  DB_PASSWORD: string;
+  DB_NAME: string;
+}
+
+const env = validateEnv<EnvironmentVariables>(envValidationSchema);
 
 export default new DataSource(
-  buildTypeOrmOptions({
+  createTypeOrmConfig({
     host: env.DB_HOST,
     port: env.DB_PORT,
     username: env.DB_USERNAME,
     password: env.DB_PASSWORD,
-    database: env.USER_DB_NAME,
+    database: env.DB_NAME,
 
-    entities: [__dirname + '/../**/*.entity.{ts,js}'],
-    migrations: [__dirname + '/migrations/*.{ts,js}'],
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    migrations: [__dirname + '/migrations/*{.ts,.js}'],
   }),
 );
