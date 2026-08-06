@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-
+import { Payload } from '@nestjs/microservices';
 import { GrpcController } from '../common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { UserService } from './user.service';
@@ -9,19 +9,19 @@ import { UserService } from './user.service';
 export class UserGrpcController {
   constructor(private readonly userService: UserService) {}
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(@Payload() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  async getUserById(request: { id: number }) {
+  async getUserById(@Payload() request: { id: number }) {
     return this.userService.findById(request.id);
   }
 
-  async updateUser(updateUserDto: UpdateUserDto) {
+  async updateUser(@Payload() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto.id, updateUserDto);
   }
 
-  async deleteUser(request: { id: number }): Promise<void> {
+  async deleteUser(@Payload() request: { id: number }): Promise<void> {
     await this.userService.delete(request.id);
   }
 

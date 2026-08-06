@@ -26,7 +26,7 @@ export abstract class BaseService<T extends BaseEntity> {
     });
 
     if (!entity) {
-      throw new NotFoundException(`${this.entityName} not found`);
+      throw new NotFoundException(`${this.entityName} with id ${id} not found`);
     }
 
     return entity;
