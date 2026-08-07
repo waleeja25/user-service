@@ -9,23 +9,23 @@ import { UserService } from './user.service';
 export class UserGrpcController {
   constructor(private readonly userService: UserService) {}
 
-  async createUser(@Payload() createUserDto: CreateUserDto) {
+  async create(@Payload() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  async getUserById(@Payload() request: EntityIdDto) {
+  async getById(@Payload() request: EntityIdDto) {
     return this.userService.findById(request.id);
   }
 
-  async updateUser(@Payload() updateUserDto: UpdateUserDto) {
+  async update(@Payload() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto.id, updateUserDto);
   }
 
-  async deleteUser(@Payload() request: EntityIdDto): Promise<void> {
+  async delete(@Payload() request: EntityIdDto): Promise<void> {
     await this.userService.delete(request.id);
   }
 
-  async listUsers() {
+  async list() {
     const users = await this.userService.findAll();
 
     return {
