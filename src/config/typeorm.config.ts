@@ -1,37 +1,22 @@
-import { DataSourceOptions } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-interface TypeOrmConfigOptions {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-  entities: string[];
-  migrations: string[];
-}
+export const getTypeOrmConfig = (
+  configService: ConfigService,
+): TypeOrmModuleOptions => ({
+  type: 'mysql',
 
-export function createTypeOrmConfig({
-  host,
-  port,
-  username,
-  password,
-  database,
-  entities,
-  migrations,
-}: TypeOrmConfigOptions): DataSourceOptions {
-  return {
-    type: 'mysql',
+  host: configService.get<string>('database.host'),
 
-    host,
-    port,
-    username,
-    password,
-    database,
+  port: configService.get<number>('database.port'),
 
-    entities,
-    migrations,
+  username: configService.get<string>('database.username'),
 
-    synchronize: false,
-    migrationsRun: false,
-  };
-}
+  password: configService.get<string>('database.password'),
+
+  database: configService.get<string>('database.database'),
+
+  autoLoadEntities: true,
+
+  synchronize: false,
+});

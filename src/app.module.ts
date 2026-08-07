@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppConfigModule, createTypeOrmModuleConfig } from './config';
+import { AppConfigModule, getTypeOrmConfig } from './config';
 import { UserModule } from './user/user.module';
 
 import { APP_FILTER } from '@nestjs/core';
@@ -14,7 +14,7 @@ import { GrpcExceptionFilter, DatabaseExceptionFilter } from './common';
 
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: createTypeOrmModuleConfig,
+      useFactory: getTypeOrmConfig,
     }),
 
     UserModule,

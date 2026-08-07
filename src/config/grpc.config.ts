@@ -1,11 +1,7 @@
-import { join } from 'path';
+import { GRPC_PACKAGE, PROTO_PATH } from '../common';
 
-export const grpcConfig: {
-  package: string;
-  url: string | undefined;
-  protoPath: string;
-} = {
-  package: 'user',
+export const grpcConfig = {
+  package: GRPC_PACKAGE.USER,
+  protoPath: PROTO_PATH.USER,
   url: process.env.GRPC_URL,
-  protoPath: join(process.cwd(), '../microservices-proto/proto/user.proto'),
-};
+} as const;
