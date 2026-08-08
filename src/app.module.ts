@@ -6,7 +6,11 @@ import { AppConfigModule, getTypeOrmConfig } from './config';
 import { UserModule } from './user/user.module';
 
 import { APP_FILTER } from '@nestjs/core';
-import { GrpcExceptionFilter, DatabaseExceptionFilter } from './common';
+import {
+  DatabaseExceptionFilter,
+  DomainExceptionFilter,
+  GrpcExceptionFilter,
+} from './common';
 
 @Module({
   imports: [
@@ -20,6 +24,10 @@ import { GrpcExceptionFilter, DatabaseExceptionFilter } from './common';
     UserModule,
   ],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: DomainExceptionFilter,
+    },
     {
       provide: APP_FILTER,
       useClass: DatabaseExceptionFilter,

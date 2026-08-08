@@ -1,8 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { BaseService } from '../common';
+import { BaseService, UserEmailExistsException } from '../common';
 import { User } from './entities';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
@@ -23,7 +23,7 @@ export class UserService extends BaseService<User> {
     });
 
     if (existingUser) {
-      throw new ConflictException('Email already exists');
+      throw new UserEmailExistsException();
     }
 
     return super.create(createUserDto);
@@ -41,7 +41,7 @@ export class UserService extends BaseService<User> {
       });
 
       if (existingUser && existingUser.id !== id) {
-        throw new ConflictException('Email already exists');
+        throw new UserEmailExistsException();
       }
     }
 
