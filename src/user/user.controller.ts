@@ -3,11 +3,8 @@ import { Payload } from '@nestjs/microservices';
 
 import { GrpcController } from '../common';
 
-import type {
-  CreateUserRequest,
-  UpdateUserRequest,
-  EntityIdRequest,
-} from '../common';
+import type { EntityIdRequest } from '../common';
+import type { CreateUserRequest, UpdateUserRequest } from './interfaces';
 
 import { UserService } from './user.service';
 

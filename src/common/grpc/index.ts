@@ -1,2 +1,2 @@
 export * from './grpc-constants';
-export * from './user-requests';
+export * from '../../user/interfaces/user.interface';

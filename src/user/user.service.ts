@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { BaseService, UserEmailExistsException } from '../common';
 import { User } from './entities';
-import type { CreateUserRequest, UpdateUserRequest } from '../common';
+import type { CreateUserRequest, UpdateUserRequest } from './interfaces';
 
 @Injectable()
 export class UserService extends BaseService<User> {

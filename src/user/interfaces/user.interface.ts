@@ -11,10 +11,6 @@ export interface UpdateUserRequest {
   password?: string;
 }
 
-export interface EntityIdRequest {
-  id: number;
-}
-
 export interface User {
   id: number;
   name: string;
