@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { ValidationPipe } from '@nestjs/common';
 import { grpcConfig } from './config';
 import { AppModule } from './app.module';
 
@@ -11,14 +10,6 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: grpcConfig,
     },
-  );
-
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-    }),
   );
 
   await app.listen();

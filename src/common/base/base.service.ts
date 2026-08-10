@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { EntityNotFoundException } from '../exceptions';
 
@@ -17,7 +17,7 @@ export abstract class BaseService<T extends BaseEntity> {
     return this.repository.save(entity);
   }
 
-  async findAll(): Promise<T[]> {
+  async list(): Promise<T[]> {
     return this.repository.find();
   }
 
@@ -53,5 +53,9 @@ export abstract class BaseService<T extends BaseEntity> {
     }
 
     await this.repository.remove(entity);
+  }
+
+  async findOne(filter: FindOneOptions<T>): Promise<T | null> {
+    return this.repository.findOne(filter);
   }
 }

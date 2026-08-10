@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { BaseService, UserEmailExistsException } from '../common';
 import { User } from './entities';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import type { CreateUserRequest, UpdateUserRequest } from '../common';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -15,10 +15,10 @@ export class UserService extends BaseService<User> {
     super(repository);
   }
 
-  override async create(createUserDto: CreateUserDto): Promise<User> {
-    const existingUser = await this.repository.findOne({
+  override async create(createUserRequest: CreateUserRequest): Promise<User> {
+    const existingUser = await this.findOne({
       where: {
-        email: createUserDto.email,
+        email: createUserRequest.email,
       },
     });
 
@@ -26,17 +26,17 @@ export class UserService extends BaseService<User> {
       throw new UserEmailExistsException();
     }
 
-    return super.create(createUserDto);
+    return super.create(createUserRequest);
   }
 
   override async update(
     id: number,
-    updateUserDto: UpdateUserDto,
+    UpdateUserRequest: UpdateUserRequest,
   ): Promise<User> {
-    if (updateUserDto.email) {
-      const existingUser = await this.repository.findOne({
+    if (UpdateUserRequest.email) {
+      const existingUser = await this.findOne({
         where: {
-          email: updateUserDto.email,
+          email: UpdateUserRequest.email,
         },
       });
 
@@ -45,6 +45,6 @@ export class UserService extends BaseService<User> {
       }
     }
 
-    return super.update(id, updateUserDto);
+    return super.update(id, UpdateUserRequest);
   }
 }

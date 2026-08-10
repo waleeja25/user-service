@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from './entities';
-import { UserGrpcController } from './user.grpc.controller';
+import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
 
-  controllers: [UserGrpcController],
+  controllers: [UserController],
 
   providers: [UserService],
 
