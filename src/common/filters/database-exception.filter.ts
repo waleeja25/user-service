@@ -31,7 +31,10 @@ export class DatabaseExceptionFilter implements ExceptionFilter<QueryFailedError
           message: 'Referenced record does not exist',
         });
       default:
-        throw exception;
+        throw new RpcException({
+          code: GrpcStatus.INTERNAL,
+          message: 'Internal Server Error',
+        });
     }
   }
 }

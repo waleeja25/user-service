@@ -26,7 +26,7 @@ import {
   providers: [
     {
       provide: APP_FILTER,
-      useClass: DomainExceptionFilter,
+      useClass: GrpcExceptionFilter,
     },
     {
       provide: APP_FILTER,
@@ -34,7 +34,7 @@ import {
     },
     {
       provide: APP_FILTER,
-      useClass: GrpcExceptionFilter,
+      useClass: DomainExceptionFilter,
     },
   ],
 })
