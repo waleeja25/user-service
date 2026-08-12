@@ -11,6 +11,7 @@ import {
   DomainExceptionFilter,
   GrpcExceptionFilter,
 } from './common';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import {
     }),
 
     UserModule,
+
+    HealthModule,
   ],
   providers: [
     {
