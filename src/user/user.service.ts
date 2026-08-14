@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { UserProto } from 'microservices-proto';
+
 import { BaseService, UserEmailExistsException } from '../common';
 import { User } from './entities';
-import type { CreateUserRequest, UpdateUserRequest } from './interfaces';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -15,7 +16,9 @@ export class UserService extends BaseService<User> {
     super(repository);
   }
 
-  override async create(createUserRequest: CreateUserRequest): Promise<User> {
+  override async create(
+    createUserRequest: UserProto.CreateUserRequest,
+  ): Promise<User> {
     const existingUser = await this.findOne({
       where: {
         email: createUserRequest.email,
@@ -31,12 +34,12 @@ export class UserService extends BaseService<User> {
 
   override async update(
     id: number,
-    UpdateUserRequest: UpdateUserRequest,
+    updateUserRequest: UserProto.UpdateUserRequest,
   ): Promise<User> {
-    if (UpdateUserRequest.email) {
+    if (updateUserRequest.email) {
       const existingUser = await this.findOne({
         where: {
-          email: UpdateUserRequest.email,
+          email: updateUserRequest.email,
         },
       });
 
@@ -45,6 +48,6 @@ export class UserService extends BaseService<User> {
       }
     }
 
-    return super.update(id, UpdateUserRequest);
+    return super.update(id, updateUserRequest);
   }
 }

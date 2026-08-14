@@ -1,39 +1,53 @@
 import { Controller } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
+import { UserProto } from 'microservices-proto';
 
 import { GrpcController } from '../common';
-
-import type { EntityIdRequest } from '../common';
-import type { CreateUserRequest, UpdateUserRequest } from './interfaces';
-
+import { User } from './entities';
 import { UserService } from './user.service';
+
+function toProto(user: User): UserProto.User {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+  };
+}
 
 @Controller()
 @GrpcController('UserService')
-export class UserController {
+export class UserController implements UserProto.UserServiceController {
   constructor(private readonly userService: UserService) {}
 
-  async create(@Payload() request: CreateUserRequest) {
-    return this.userService.create(request);
+  async create(
+    @Payload() request: UserProto.CreateUserRequest,
+  ): Promise<UserProto.User> {
+    return toProto(await this.userService.create(request));
   }
 
-  async getById(@Payload() request: EntityIdRequest) {
-    return this.userService.findById(request.id);
+  async getById(
+    @Payload() request: UserProto.EntityIdRequest,
+  ): Promise<UserProto.User> {
+    return toProto(await this.userService.findById(request.id));
   }
 
-  async update(@Payload() request: UpdateUserRequest) {
-    return this.userService.update(request.id, request);
+  async update(
+    @Payload() request: UserProto.UpdateUserRequest,
+  ): Promise<UserProto.User> {
+    return toProto(await this.userService.update(request.id, request));
   }
 
-  async delete(@Payload() request: EntityIdRequest): Promise<void> {
+  async delete(@Payload() request: UserProto.EntityIdRequest): Promise<void> {
     await this.userService.delete(request.id);
   }
 
-  async list() {
+  async list(): Promise<UserProto.UserListResponse> {
     const users = await this.userService.list();
 
     return {
-      data: users,
+      data: users.map(toProto),
     };
   }
 }
