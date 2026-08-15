@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
+import { EntityNotFoundException } from '@microservices/microservice-common';
 import { BaseEntity } from './base.entity';
-import { EntityNotFoundException } from '../exceptions';
 
 @Injectable()
 export abstract class BaseService<T extends BaseEntity> {
@@ -36,10 +36,6 @@ export abstract class BaseService<T extends BaseEntity> {
   async update(id: number, data: DeepPartial<T>): Promise<T> {
     const entity = await this.findById(id);
 
-    if (!entity) {
-      throw new EntityNotFoundException(this.entityName, id);
-    }
-
     this.repository.merge(entity, data);
 
     return this.repository.save(entity);
@@ -47,10 +43,6 @@ export abstract class BaseService<T extends BaseEntity> {
 
   async delete(id: number): Promise<void> {
     const entity = await this.findById(id);
-
-    if (!entity) {
-      throw new EntityNotFoundException(this.entityName, id);
-    }
 
     await this.repository.remove(entity);
   }

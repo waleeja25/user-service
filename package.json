@@ -42,6 +42,7 @@
     "joi": "^18.2.3",
     "microservices-proto": "file:../microservices-proto",
     "mysql2": "^3.23.2",
+    "@microservices/microservice-common": "file:../microservices-common",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.31",
