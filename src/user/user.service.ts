@@ -50,4 +50,9 @@ export class UserService extends BaseService<User> {
 
     return super.update(id, updateUserRequest);
   }
+
+  override async delete(id: number): Promise<void> {
+    await this.findById(id);
+    await this.repository.softDelete(id);
+  }
 }
