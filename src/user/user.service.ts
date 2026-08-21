@@ -29,7 +29,11 @@ export class UserService extends BaseService<User> {
       throw new UserEmailExistsException();
     }
 
-    return super.create(createUserRequest);
+    const user = await super.create(createUserRequest);
+
+    this.logger.log(`User ${user.id} created successfully`);
+
+    return user;
   }
 
   override async update(
@@ -48,11 +52,17 @@ export class UserService extends BaseService<User> {
       }
     }
 
-    return super.update(id, updateUserRequest);
+    const user = await super.update(id, updateUserRequest);
+
+    this.logger.log(`User ${id} updated successfully`);
+
+    return user;
   }
 
   override async delete(id: number): Promise<void> {
     await this.findById(id);
     await this.repository.softDelete(id);
+
+    this.logger.log(`User ${id} deleted successfully`);
   }
 }
