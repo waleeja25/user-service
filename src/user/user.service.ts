@@ -6,12 +6,15 @@ import { UserProto } from 'microservices-proto';
 
 import { BaseService, UserEmailExistsException } from '../common';
 import { User } from './entities';
+import { RabbitMQService } from '../rabbitmq';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User)
     protected readonly repository: Repository<User>,
+
+    private readonly rabbitMQService: RabbitMQService,
   ) {
     super(repository);
   }
@@ -32,6 +35,8 @@ export class UserService extends BaseService<User> {
     const user = await super.create(createUserRequest);
 
     this.logger.log(`User ${user.id} created successfully`);
+
+    await this.rabbitMQService.publishUserCreated({ userId: user.id });
 
     return user;
   }

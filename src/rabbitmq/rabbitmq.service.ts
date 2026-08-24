@@ -1,0 +1,39 @@
+import { Inject, Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
+import { RABBITMQ_ROUTING_KEYS } from './constants/rabbitmq.constants';
+
+import { UserCreatedEvent } from './events';
+
+@Injectable()
+export class RabbitMQService implements OnModuleInit {
+  private readonly logger = new Logger(RabbitMQService.name);
+  constructor(
+    @Inject('RABBITMQ_CLIENT')
+    private readonly rabbitMQClient: ClientProxy,
+  ) {}
+
+  async onModuleInit(): Promise<void> {
+    await this.rabbitMQClient.connect();
+
+    this.logger.log('RabbitMQ connected successfully');
+  }
+
+  async publishUserCreated(data: UserCreatedEvent): Promise<void> {
+    await this.publish(RABBITMQ_ROUTING_KEYS.USER_CREATED, data);
+  }
+
+  private async publish(routingKey: string, data: unknown): Promise<void> {
+    try {
+      await firstValueFrom(this.rabbitMQClient.emit(routingKey, data));
+      this.logger.log(`Published RabbitMQ event "${routingKey}"`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to publish RabbitMQ event "${routingKey}": ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        error instanceof Error ? error.stack : undefined,
+      );
+    }
+  }
+}

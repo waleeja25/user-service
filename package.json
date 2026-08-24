@@ -29,6 +29,8 @@
     "@grpc/grpc-js": "^1.14.4",
     "@grpc/proto-loader": "^0.8.1",
     "@microservices/microservice-common": "file:../microservices-common",
+    "amqp-connection-manager": "^5.0.0",
+    "amqplib": "^2.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
